@@ -7,13 +7,13 @@ export async function initMongoose() {
     ? `mongodb+srv://${baseMongoUrl}`
     : `mongodb://${baseMongoUrl}:${config.MONGO_PORT}`;
 
-  const session = await mongoose.connect(
-    `${mongoURL}/${config.MONGO_DB}?authMechanism=SCRAM-SHA-1&retryWrites=true&w=majority`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  );
+  const session = await mongoose.connect(`${mongoURL}/${config.MONGO_DB}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    authMechanism: "SCRAM-SHA-1",
+    retryWrites: true,
+    authSource: config.MONGO_SRV ? undefined : "admin",
+  });
 
   return session;
 }
